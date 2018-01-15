@@ -374,7 +374,7 @@ class MaskAccessor(object):
         ret = ret.stack(**opts)
         ret = ret.T
         ret = ret.where(ret == ret, drop=True)
-        return ret.data.tolist()
+        return ret.data#.tolist()
 
     def _select_value(self, selection, value):
         '''
