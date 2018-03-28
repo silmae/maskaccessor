@@ -25,7 +25,7 @@ import random
 
 class test(unittest.TestCase):
 
-    def test__init__and_refresh(self):
+    def test__init__and_reset(self):
         #, xarray_obj, **kwargs
         arr = np.random.rand(5, 4, 3)
         cube = xr.DataArray(arr,
@@ -43,7 +43,7 @@ class test(unittest.TestCase):
         self.assertTrue(exp_shape == cube.M.shape)
         self.assertTrue(cube.M.no_mask_dims == exp_no_mask_dims)
         self.assertTrue((cube.M.mask == 1).all)
-        cube.M.refresh(dims=['y', 'x'],
+        cube.M.reset(dims=['y', 'x'],
                        matrix = [[1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1],
                                  [1,1,1,1]])
         self.assertTrue((cube.M.mask == 1).all)
@@ -58,13 +58,13 @@ class test(unittest.TestCase):
                     [1, 1, 1, 1],
                     [1, 1, 1, 1],
                     [1, 1, 1, 1]]
-        cube.M.refresh(matrix=exp_mask)
+        cube.M.reset(matrix=exp_mask)
         self.assertTrue(cube.M.dims == exp_dims)
         self.assertTrue(cube.M.dims_dict == exp_dims_dict)
         self.assertTrue(exp_shape == cube.M.shape)
         self.assertTrue(cube.M.no_mask_dims == exp_no_mask_dims)
         self.assertTrue((np.array(exp_mask) == cube.M.mask).all)
-        cube.M.refresh(matrix=[[0, 0, 1, 1],
+        cube.M.reset(matrix=[[0, 0, 1, 1],
                               [1, 1, 1, 1],
                               [1, 1, 1, 1],
                               [1, 3, 1, 1],
@@ -134,7 +134,7 @@ class test(unittest.TestCase):
                             coords={'y': [1, 2, 3, 4, 5],
                                     'x': [1, 2, 3, 4],
                                     'z': [1, 2, 3]})
-        cube.M.refresh(dims=['y', 'x'],
+        cube.M.reset(dims=['y', 'x'],
                        matrix=[[1, 0, 0, 1], [1, 1, 1, 1], [1, 1, 1, 1],
                                [1, 1, 0, 1],
                                [1, 0, 1, 1]])
@@ -142,7 +142,7 @@ class test(unittest.TestCase):
         self.assertFalse((cube.M.mask == 1).all())
         cube.M.selected_zeros()
         self.assertTrue((cube.M.mask == 0).all())
-        cube.M.refresh(dims=['y', 'x'],
+        cube.M.reset(dims=['y', 'x'],
                        matrix=[[1, 0, 0, 1], [1, 1, 1, 1], [1, 1, 1, 1],
                                [1, 1, 0, 1],
                                [1, 0, 1, 1]])
@@ -176,14 +176,14 @@ class test(unittest.TestCase):
         exp_res = np.array([[]])
         self.assertTrue((exp_res == res).all())
 
-        cube.M.refresh(matrix=[[0,0,0],[1,1,1],[0,0,0],[0,0,0]])
+        cube.M.reset(matrix=[[0,0,0],[1,1,1],[0,0,0],[0,0,0]])
         res = cube.M.mask_to_pixels()
         exp_res = np.array([[1, 0],
                             [1, 1],
                             [1, 2]])
         self.assertTrue((exp_res == res).all())
 
-        cube.M.refresh(matrix=[[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]])
+        cube.M.reset(matrix=[[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]])
         res = cube.M.mask_to_pixels()
         exp_res = np.array([[0, 1],
                             [1, 1],
@@ -191,7 +191,7 @@ class test(unittest.TestCase):
                             [3, 1]])
         self.assertTrue((exp_res == res).all())
 
-        cube.M.refresh(matrix=[[0, 1, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]])
+        cube.M.reset(matrix=[[0, 1, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]])
         res = cube.M.mask_to_pixels()
         exp_res = np.array([[0, 1],
                             [1, 0],
@@ -228,7 +228,7 @@ class test(unittest.TestCase):
         exp_res = []
         self.assertTrue(exp_res == res)
 
-        cube.M.refresh(matrix=[[0, 0, 0], [1, 1, 1], [0, 0, 0], [0, 0, 0]])
+        cube.M.reset(matrix=[[0, 0, 0], [1, 1, 1], [0, 0, 0], [0, 0, 0]])
         res = cube.M.to_list()
         exp_res = [cube.data[:, 1, 0].tolist(),
                    cube.data[:, 1, 1].tolist(),
@@ -236,7 +236,7 @@ class test(unittest.TestCase):
 
         self.assertTrue(exp_res == res)
 
-        cube.M.refresh(matrix=[[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]])
+        cube.M.reset(matrix=[[0, 1, 0], [0, 1, 0], [0, 1, 0], [0, 1, 0]])
         res = cube.M.to_list()
         exp_res = [cube.data[:, 0, 1].tolist(),
                    cube.data[:, 1, 1].tolist(),
@@ -245,7 +245,7 @@ class test(unittest.TestCase):
         self.assertTrue(exp_res == res)
 
 
-        cube.M.refresh(matrix=[[0, 1, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]])
+        cube.M.reset(matrix=[[0, 1, 0], [1, 1, 0], [0, 1, 0], [0, 1, 1]])
         res = cube.M.to_list()
         exp_res = [cube.data[:, 0, 1].tolist(),
                    cube.data[:, 1, 0].tolist(),
@@ -269,7 +269,7 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['y'] == cube.coords['y']).all())
         self.assertTrue((res.coords['x'] == cube.coords['x']).all())
         self.assertTrue((res.coords['z'] == cube.coords['z']).all())
-        cube.M.refresh(matrix=[[0, 0, 0, 0], [1, 1, 1, 1]])
+        cube.M.reset(matrix=[[0, 0, 0, 0], [1, 1, 1, 1]])
         res = cube.M.where_masked()
         exp_data = [[[1, 3, 2, 5]],
                     [[2, 6, 4, 5]],
@@ -284,7 +284,7 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
 
-        cube.M.refresh(matrix=[[1, 0, 0, 0], [1, 1, 1, 1]])
+        cube.M.reset(matrix=[[1, 0, 0, 0], [1, 1, 1, 1]])
         res = cube.M.where_masked()
         exp_data = [[[1, np.nan, np.nan, np.nan], [1, 3, 2, 5]],
                     [[3, np.nan, np.nan, np.nan], [2, 6, 4, 5]],
@@ -299,7 +299,7 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
 
-        cube.M.refresh(matrix=[[0, 1, 0, 0], [0, 1, 0, 0]])
+        cube.M.reset(matrix=[[0, 1, 0, 0], [0, 1, 0, 0]])
         res = cube.M.where_masked()
         exp_data = [[[2], [3]],
                     [[2], [6]],
@@ -315,7 +315,7 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
 
-        cube.M.refresh(matrix=[[0, 1, 0, 0], [1, 1, 0, 0]])
+        cube.M.reset(matrix=[[0, 1, 0, 0], [1, 1, 0, 0]])
         res = cube.M.where_masked()
         exp_data = [[[np.nan, 2], [1, 3]],
                     [[np.nan, 2], [2, 6]],

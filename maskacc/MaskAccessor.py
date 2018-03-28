@@ -55,11 +55,11 @@ class MaskAccessor(object):
                             'or at least have attributes dims, shape, isel ' +
                             'and where.')
         self._obj = xarray_obj
-        self.refresh(**kwargs)
+        self.reset(**kwargs)
         
-    def refresh(self, **kwargs):
+    def reset(self, **kwargs):
         '''
-        Function that refreshesh the MaskAccessor with a matrix and masked
+        Function that resetesh the MaskAccessor with a matrix and masked
         dimensions.
         TODO: TEST
         :param kwargs:  dims: The dimensions you want to use for a mask
@@ -184,7 +184,7 @@ class MaskAccessor(object):
         :return: nothing
         '''
         raise AssertionError('You cannot change the dims without changing ' +
-                             'mask as well. Try refresh -method instead.')
+                             'mask as well. Try reset -method instead.')
     
         
     @property
@@ -205,7 +205,7 @@ class MaskAccessor(object):
         :return: nothing
         '''
         raise AssertionError('You cannot change the dims without changing ' +
-                             'mask as well. Try refresh -method instead.')
+                             'mask as well. Try reset -method instead.')
     
             
     @property
@@ -225,7 +225,7 @@ class MaskAccessor(object):
         TODO: test
         '''
         raise AssertionError('You cannot change the shape without changing ' +
-                             'mask as well. Try refresh -method instead.')
+                             'mask as well. Try reset -method instead.')
     
     @property
     def dims_dict(self):
@@ -244,7 +244,7 @@ class MaskAccessor(object):
         TODO: test
         '''
         raise AssertionError('You cannot change the dims_dict without ' +
-                             'changing mask as well. Try refresh -method ' +
+                             'changing mask as well. Try reset -method ' +
                              'instead.')
     
     @property
@@ -374,7 +374,7 @@ class MaskAccessor(object):
         ret = ret.stack(**opts)
         ret = ret.T
         ret = ret.where(ret == ret, drop=True)
-        return ret.data#.tolist()
+        return ret.data.tolist()
 
     def _select_value(self, selection, value):
         '''
