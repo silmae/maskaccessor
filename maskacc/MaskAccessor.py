@@ -349,16 +349,28 @@ class MaskAccessor(object):
     #
     #    return np.array(ret)
    
-    def where_masked(self):
+    def where_masked(self, keep_mask=False):
         '''
         Drops the parts of xarray objects where mask = 0
         :return: new xarray objects without the mask = 0 -pixels
-        TODO: Test
+        TODO: Test keep_mask
         '''
-        return self._obj.where(self.mask_as_xarray(), drop=True)
-        # For drop = True 
-        # we need _mask to be DataArray or Dataset
-        
+        if not keep_mask:
+            return self._obj.where(self.mask_as_xarray(), drop=True)
+            # For drop = True
+            # we need _mask to be DataArray or Dataset
+        first_coord = self.dims[0]
+        second_coord = self.dims[1]
+        ret =  self._obj.where(self.mask_as_xarray(), drop=True)
+        new_mask = self.mask_as_xarray().loc[{
+            first_coord:slice(ret.coords[first_coord].data[0],
+                    ret.coords[first_coord].data[-1]),
+            second_coord:slice(ret.coords[second_coord].data[0],
+                    ret.coords[second_coord].data[-1])}]
+        ret.M.mask = new_mask.data
+        return ret
+
+
     
     def to_list(self):
         '''
