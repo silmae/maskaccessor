@@ -15,3 +15,5 @@ Check out the example notebook for detailed example.
 
 
 Citation: Annala, L., Eskelinen, M. A., Hämäläinen, J., Riihinen, A., and Pölönen, I.: PRACTICAL APPROACH FOR HYPERSPECTRAL IMAGE PROCESSING IN PYTHON, Int. Arch. Photogramm. Remote Sens. Spatial Inf. Sci., XLII-3, 45-52, https://doi.org/10.5194/isprs-archives-XLII-3-45-2018, 2018. 
+
+
