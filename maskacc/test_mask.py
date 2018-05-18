@@ -44,8 +44,11 @@ class test(unittest.TestCase):
         self.assertTrue(cube.M.no_mask_dims == exp_no_mask_dims)
         self.assertTrue((cube.M.mask == 1).all)
         cube.M.reset(dims=['y', 'x'],
-                       matrix = [[1,1,1,1], [1,1,1,1], [1,1,1,1], [1,1,1,1],
-                                 [1,1,1,1]])
+                       matrix=[[1, 1, 1, 1],
+                               [1, 1, 1, 1],
+                               [1, 1, 1, 1],
+                               [1, 1, 1, 1],
+                               [1, 1, 1, 1]])
         self.assertTrue((cube.M.mask == 1).all)
         self.assertTrue(hasattr(cube, 'M'))
         self.assertTrue(hasattr(cube.M, 'dims'))
@@ -269,6 +272,12 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['y'] == cube.coords['y']).all())
         self.assertTrue((res.coords['x'] == cube.coords['x']).all())
         self.assertTrue((res.coords['z'] == cube.coords['z']).all())
+
+        # A test for keep_mask here with the same cube
+        res = cube.M.where_masked(keep_mask=True)
+        self.assertTrue((res.M.mask == cube.M.mask).all())
+
+
         cube.M.reset(matrix=[[0, 0, 0, 0], [1, 1, 1, 1]])
         res = cube.M.where_masked()
         exp_data = [[[1, 3, 2, 5]],
@@ -284,6 +293,10 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
 
+        # A test for keep_mask here with the same cube
+        res = cube.M.where_masked(keep_mask=True)
+        self.assertTrue((res.M.mask == [1, 1, 1, 1]).all())
+
         cube.M.reset(matrix=[[1, 0, 0, 0], [1, 1, 1, 1]])
         res = cube.M.where_masked()
         exp_data = [[[1, np.nan, np.nan, np.nan], [1, 3, 2, 5]],
@@ -298,6 +311,10 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['y'].data == exp.coords['y'].data).all())
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
+
+        # A test for keep_mask here with the same cube
+        res = cube.M.where_masked(keep_mask=True)
+        self.assertTrue((res.M.mask == [[1, 0, 0, 0], [1, 1, 1, 1]]).all())
 
         cube.M.reset(matrix=[[0, 1, 0, 0], [0, 1, 0, 0]])
         res = cube.M.where_masked()
@@ -315,6 +332,10 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
 
+        # A test for keep_mask here with the same cube
+        res = cube.M.where_masked(keep_mask=True)
+        self.assertTrue((res.M.mask ==[[1], [1]]).all())
+
         cube.M.reset(matrix=[[0, 1, 0, 0], [1, 1, 0, 0]])
         res = cube.M.where_masked()
         exp_data = [[[np.nan, 2], [1, 3]],
@@ -330,6 +351,10 @@ class test(unittest.TestCase):
         self.assertTrue((res.coords['y'].data == exp.coords['y'].data).all())
         self.assertTrue((res.coords['x'].data == exp.coords['x'].data).all())
         self.assertTrue((res.coords['z'].data == exp.coords['z'].data).all())
+
+        # A test for keep_mask here with the same cube
+        res = cube.M.where_masked(keep_mask=True)
+        self.assertTrue((res.M.mask == [[0, 1], [1, 1]]).all())
 
     def test__select_value(self):
         arr = np.random.rand(5, 4, 3)
